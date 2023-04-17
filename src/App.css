@@ -9,7 +9,7 @@ body,
 html,
 #root,
 .App {
-  min-height: 100vh
+  min-height: 100%;
 }
 .btn {
   font-size: 0.9rem;
@@ -85,4 +85,12 @@ hr {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+}
+#invoice-list{
+  min-height: 65vh;
+}
+#invoiceList{
+  border-radius: 10px;
+  border-color:#837c7c1a;
+  border-style: ridge;
 }
