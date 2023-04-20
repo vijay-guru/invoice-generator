@@ -70,15 +70,15 @@ class InvoiceForm extends React.Component {
   }
   sendInvoice(items,editEnabled){
     if(
-      items.billFrom.trim() ==="" || 
-      items.billFromAddress.trim() ==="" || 
-      items.billFromEmail.trim() ==="" || 
-      items.billTo.trim() ==="" || 
-      items.billToEmail.trim() ==="" || 
-      items.billToAddress.trim() ==="" || 
-      items.currency.trim() ==="" || 
-      items.dateOfIssue.trim() ==="" || 
-      items.invoiceNumber.trim() ==="" ){
+      items.billFrom.trim() =="" || 
+      items.billFromAddress.trim() =="" || 
+      items.billFromEmail.trim() =="" || 
+      items.billTo.trim() =="" || 
+      items.billToEmail.trim() =="" || 
+      items.billToAddress.trim() =="" || 
+      items.currency.trim() =="" || 
+      items.dateOfIssue.trim() =="" || 
+      items.invoiceNumber.trim() =="" ){
         alert("Please enter all the details !!!");
         return;
       }
@@ -145,7 +145,7 @@ class InvoiceForm extends React.Component {
     var items = this.state.items.slice();
     var newItems = items.map(function(items) {
       for (var key in items) {
-        if (key === item.name && items.id === item.id) {
+        if (key == item.name && items.id == item.id) {
           items[key] = item.value;
         }
       }
