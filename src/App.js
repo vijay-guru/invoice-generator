@@ -20,6 +20,7 @@ class App extends Component {
           <Routes>
           <Route  path="/" element={<HomePage/>} exact></Route>
           <Route  path="/create" element={<InvoiceForm/>} ></Route>
+          <Route  path="/edit/:id" element={<InvoiceForm/>} ></Route>
           </Routes>
         </BrowserRouter>
       </Container>

@@ -8,6 +8,8 @@ import Modal from 'react-bootstrap/Modal';
 import { BiPaperPlane, BiCloudDownload } from "react-icons/bi";
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf'
+import {  Link } from "react-router-dom";
+
 
 function GenerateInvoice() {
   html2canvas(document.querySelector("#invoiceCapture")).then((canvas) => {
@@ -26,6 +28,7 @@ function GenerateInvoice() {
   });
 }
 
+
 class InvoiceModal extends React.Component {
   constructor(props) {
     super(props);
@@ -43,8 +46,8 @@ class InvoiceModal extends React.Component {
                 </h6>
               </div>
               <div className="text-end ms-4">
-                <h6 className="fw-bold mt-1 mb-2">Amount&nbsp;Due:</h6>
-                <h5 className="fw-bold text-secondary"> {this.props.currency} {this.props.total}</h5>
+                <h6 className="fw-bold mt-1 mb-2">Amount&nbsp;Due:{this.props.total}</h6>
+                <h5 className="fw-bold text-secondary">Currency&nbsp;:{this.props.currency}</h5>
               </div>
             </div>
             <div className="p-4">
@@ -104,14 +107,14 @@ class InvoiceModal extends React.Component {
                     <td className="fw-bold" style={{width: '100px'}}>SUBTOTAL</td>
                     <td className="text-end" style={{width: '100px'}}>{this.props.currency} {this.props.subTotal}</td>
                   </tr>
-                  {this.props.taxAmmount != 0.00 &&
+                  {this.props.taxAmmount !== 0.00 &&
                     <tr className="text-end">
                       <td></td>
                       <td className="fw-bold" style={{width: '100px'}}>TAX</td>
                       <td className="text-end" style={{width: '100px'}}>{this.props.currency} {this.props.taxAmmount}</td>
                     </tr>
                   }
-                  {this.props.discountAmmount != 0.00 &&
+                  {this.props.discountAmmount !== 0.00 &&
                     <tr className="text-end">
                       <td></td>
                       <td className="fw-bold" style={{width: '100px'}}>DISCOUNT</td>
@@ -134,9 +137,20 @@ class InvoiceModal extends React.Component {
           <div className="pb-4 px-4">
             <Row>
               <Col md={6}>
-                <Button variant="primary" className="d-block w-100" onClick={GenerateInvoice}>
+                {this.props.edit ? 
+                <Link to={`/edit/${this.props.info.invoiceNumber}`}>
+                <Button variant="primary" className="d-block w-100">
+                <BiPaperPlane style={{width: '15px', height: '15px', marginTop: '-3px'}} className="me-2"/>Edit Invoice
+                </Button> 
+                </Link>
+                : 
+                <Button variant="primary" className="d-block w-100" onClick={()=>GenerateInvoice(this.props)}>
                   <BiPaperPlane style={{width: '15px', height: '15px', marginTop: '-3px'}} className="me-2"/>Send Invoice
                 </Button>
+                }
+                {/* <Button variant="primary" className="d-block w-100" onClick={()=>SendInvoice(this.props)}>
+                  <BiPaperPlane style={{width: '15px', height: '15px', marginTop: '-3px'}} className="me-2"/>{this.props.edit ? 'Edit Invoice':'Send Invoice'}
+                </Button> */}
               </Col>
               <Col md={6}>
                 <Button variant="outline-primary" className="d-block w-100 mt-3 mt-md-0" onClick={GenerateInvoice}>
@@ -152,5 +166,7 @@ class InvoiceModal extends React.Component {
     )
   }
 }
+
+
 
 export default InvoiceModal;

@@ -1,4 +1,4 @@
-import React from 'react'
+import React,{useEffect, useState} from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -7,8 +7,18 @@ import Form from 'react-bootstrap/Form';
 import Card from 'react-bootstrap/Card';
 import InvoiceList from './InvoiceList';
 import {Link} from 'react-router-dom'
+import { useSelector } from 'react-redux';
+import EmptyInvoiceList from './EmptyInvoiceList';
 
 function HomePage() {
+  
+  const invoiceLists = useSelector(store => store);
+  const [invoices,setInvoices]=useState([])
+  useEffect(()=>{
+    invoiceLists.invoiceDetails.map(invoice => {
+      setInvoices(oldInvoices=>[...oldInvoices,invoice])
+    })
+  },[invoiceLists])
   return (
     <div>
       <Row>
@@ -30,9 +40,11 @@ function HomePage() {
             </div>
             <hr className="my-4"/>
             <div id='invoice-list'>
-              <InvoiceList/>
-              <InvoiceList/>
-              <InvoiceList/>
+              {invoices.length !== 0 ? (invoices.map((item)=>(
+                      <InvoiceList item={item} />
+               )))
+              : 
+              <EmptyInvoiceList/>}
             </div> 
             <hr className="my-4"/>
             <Form.Label className="fw-bold text-center">Thanks for your business!</Form.Label>
@@ -43,4 +55,4 @@ function HomePage() {
   )
 }
 
-export default HomePage
+export default HomePage;

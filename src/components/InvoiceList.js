@@ -1,30 +1,46 @@
-import React from 'react'
-import Modal from 'react-bootstrap/Modal';
-import { BiPaperPlane, BiCloudDownload } from "react-icons/bi";
+import React, {useState } from 'react'
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
-import Table from 'react-bootstrap/Table';
+import InvoiceModal from './InvoiceModal';
+import { useDispatch } from 'react-redux';
+import { deleteInvoiceList } from '../store/actions/invoiceActions';
 
-function InvoiceList() {
+
+function InvoiceList({item}) {
+  const [isOpen , setIsOpen]=useState(false);
+
+  const dispatch = useDispatch()
+  const deleteList = ()=>{
+    dispatch(deleteInvoiceList(item))
+    alert("Invoice deleted successfully !!!")
+    window.location.reload()
+  }
+  const viewInvoice = ()=>{
+    setIsOpen(true);
+  }
+  const closeInvoice = ()=> {
+    setIsOpen(false);
+  }
   return (
     <div className='p-1'>
           <div id="invoiceList" className=' bg-light'>
             <div className="flex-row justify-content-between align-items-start w-100 p-2">
             <div className='row'>
               <div className="col-md- w-50">
-                <h6 className="fw-bold text-secondary mb-1"> Invoice #: 1</h6>
-                <h5 className="fw-bold my-2">John Uberbacher</h5>
+                <h6 className="fw-bold text-secondary mb-1"> Invoice #: {item.invoiceNumber}</h6>
+                <h5 className="fw-bold my-2">{item.billFrom}</h5>
               </div>
               <div className="col-md-2">
-                <h6 className="fw-bold mt-1 mb-2">Amount&nbsp;Due:</h6>
-                <h6 className="fw-bold text-secondary"> "Curr : 500"</h6>
+                <h6 className="fw-bold mt-1 mb-2">Amount&nbsp;Due: {item.total}</h6>
+                <h6 className="fw-bold text-secondary"> Curr : {item.currency}</h6>
               </div>
               <div className="col-md-2">
-              <Button variant="primary" type="submit" className="d-block w-100 h-40">View</Button>
+              <Button variant="primary" onClick={viewInvoice} className=" w-100">View</Button>
+                      <InvoiceModal showModal={isOpen} closeModal={closeInvoice} info={item} items={item.items} currency={item.currency} subTotal={item.subTotal} taxAmmount={item.taxAmmount} discountAmmount={item.discountAmmount} total={item.total} edit={true}/>
               </div>
               <div className="col-md-2">
-              <Button variant="secondary" type="submit" className="d-block w-100 h-40">Delete</Button>
+              <Button variant="secondary" onClick={deleteList} className=" w-100">Delete</Button>
               </div>
               </div>
             </div>
@@ -32,19 +48,19 @@ function InvoiceList() {
               <Row className="mb-4">
                 <Col md={4}>
                   <div className="fw-bold">Billed to:</div>
-                  <div>Vijay Guru</div>
-                  <div>Address of Vijay</div>
-                  <div>vjguru40@gmail.com</div>
+                  <div>{item.billTo}</div>
+                  <div>{item.billToAddress}</div>
+                  <div>{item.billToEmail}</div>
                 </Col>
                 <Col md={4}>
                   <div className="fw-bold">Billed From:</div>
-                  <div>Vijay Guru</div>
-                  <div>Address of Vijay</div>
-                  <div>vjguru40@gmail.com</div>
+                  <div>{item.billFrom}</div>
+                  <div>{item.billFromAddress}</div>
+                  <div>{item.billFromEmail}</div>
                 </Col>
                 <Col md={4}>
                   <div className="fw-bold mt-2">Date Of Issue:</div>
-                  <div>17/04/2023</div>
+                  <div>{item.dateOfIssue}</div>
                 </Col>
               </Row>
         </div>

@@ -8,31 +8,42 @@ import Card from 'react-bootstrap/Card';
 import InvoiceItem from './InvoiceItem';
 import InvoiceModal from './InvoiceModal';
 import InputGroup from 'react-bootstrap/InputGroup';
+import { connect } from 'react-redux';
+import { addInvoiceList, editInvoiceList } from '../store/actions/invoiceActions';
+import withRouter from '../withRouter';
 
 class InvoiceForm extends React.Component {
   constructor(props) {
+    
     super(props);
+    const editEnabledComponent = (props.params.id==null)
+    const invoiceDetail = editEnabledComponent ? null : props.invoiceDetails.filter( (e)=> {
+      return e.invoiceNumber === props.params.id;
+  });
+    const invoice=editEnabledComponent ? null : invoiceDetail[0];
+
+
     this.state = {
-      isOpen: false,
-      currency: '$',
-      currentDate: '',
-      invoiceNumber: 1,
-      dateOfIssue: '',
-      billTo: '',
-      billToEmail: '',
-      billToAddress: '',
-      billFrom: '',
-      billFromEmail: '',
-      billFromAddress: '',
-      notes: '',
-      total: '0.00',
-      subTotal: '0.00',
-      taxRate: '',
-      taxAmmount: '0.00',
-      discountRate: '',
-      discountAmmount: '0.00'
+      isOpen: editEnabledComponent ? false : invoice.isOpen,
+      currency: editEnabledComponent ? '$' : invoice.currency,
+      currentDate: new Date(),
+      invoiceNumber:editEnabledComponent ? '' : invoice.invoiceNumber,
+      dateOfIssue:editEnabledComponent ? '' : invoice.dateOfIssue,
+      billTo: editEnabledComponent ? '' : invoice.billTo,
+      billToEmail: editEnabledComponent ? '' : invoice.billToEmail,
+      billToAddress: editEnabledComponent ? '' : invoice.billToAddress,
+      billFrom: editEnabledComponent ? '' : invoice.billFrom,
+      billFromEmail: editEnabledComponent ? '' : invoice.billFromEmail,
+      billFromAddress: editEnabledComponent ? '' : invoice.billFromAddress,
+      notes: editEnabledComponent ? '' : invoice.notes,
+      total:editEnabledComponent ? '0.00' : invoice.total,
+      subTotal:editEnabledComponent ? '0.00' : invoice.subTotal,
+      taxRate:editEnabledComponent ? '' : invoice.taxRate,
+      taxAmmount:editEnabledComponent ? '0.00' : invoice.taxAmmount,
+      discountRate:editEnabledComponent ? '' : invoice.discountRate,
+      discountAmmount:editEnabledComponent ? '0.00' : invoice.discountAmmount
     };
-    this.state.items = [
+    this.state.items =editEnabledComponent ? [
       {
         id: 0,
         name: '',
@@ -40,11 +51,48 @@ class InvoiceForm extends React.Component {
         price: '1.00',
         quantity: 1
       }
-    ];
+    ] : invoice.items;
     this.editField = this.editField.bind(this);
   }
   componentDidMount(prevProps) {
     this.handleCalculateTotal()
+  }
+  checkForInvoiceNumber(item,editEnabled){
+    if(editEnabled){
+    this.props.invoiceDetails.map((invoice)=>{
+      if(item.invoiceNumber === invoice.invoiceNumber){
+        alert("Invoice number already exists .Please retry after changing it !!!.")
+        item.invoiceNumber="";
+        return null;
+      }
+    })}
+    this.sendInvoice(item,editEnabled);
+  }
+  sendInvoice(items,editEnabled){
+    if(
+      items.billFrom.trim() ==="" || 
+      items.billFromAddress.trim() ==="" || 
+      items.billFromEmail.trim() ==="" || 
+      items.billTo.trim() ==="" || 
+      items.billToEmail.trim() ==="" || 
+      items.billToAddress.trim() ==="" || 
+      items.currency.trim() ==="" || 
+      items.dateOfIssue.trim() ==="" || 
+      items.invoiceNumber.trim() ==="" ){
+        alert("Please enter all the details !!!");
+        return;
+      }
+      
+    if(editEnabled){
+      this.props.addInvoiceList(items);
+      alert("Invoice added successfully !!! . Please redirect to home check the invoices.")
+      
+    }
+    else{
+      this.props.editInvoiceList(items.invoiceNumber,items)
+      alert("Invoice updated successfully !!! . Please redirect to home check the invoices.")
+    }
+    
   }
   handleRowDel(items) {
     var index = this.state.items.indexOf(items);
@@ -97,7 +145,7 @@ class InvoiceForm extends React.Component {
     var items = this.state.items.slice();
     var newItems = items.map(function(items) {
       for (var key in items) {
-        if (key == item.name && items.id == item.id) {
+        if (key === item.name && items.id === item.id) {
           items[key] = item.value;
         }
       }
@@ -206,6 +254,7 @@ class InvoiceForm extends React.Component {
         <Col md={4} lg={3}>
           <div className="sticky-top pt-md-3 pt-xl-4">
             <Button variant="primary" type="submit" className="d-block w-100">Review Invoice</Button>
+            <Button variant="primary" onClick={()=>this.checkForInvoiceNumber(this.state,this.props.params.id==null)}  className="d-block w-100 mt-1">{this.props.params.id==null ? 'Add Invoice' : 'Update Invoice'}</Button>
             <InvoiceModal showModal={this.state.isOpen} closeModal={this.closeModal} info={this.state} items={this.state.items} currency={this.state.currency} subTotal={this.state.subTotal} taxAmmount={this.state.taxAmmount} discountAmmount={this.state.discountAmmount} total={this.state.total}/>
             <Form.Group className="mb-3">
               <Form.Label className="fw-bold">Currency:</Form.Label>
@@ -245,4 +294,15 @@ class InvoiceForm extends React.Component {
   }
 }
 
-export default InvoiceForm;
+const mapStateToProps = state => ({
+  invoiceDetails: state.invoiceDetails
+});
+
+const mapDispatchToProps = dispatch => {
+  return {
+    addInvoiceList: (invoiceList)=> dispatch(addInvoiceList(invoiceList)),
+    editInvoiceList: (invoiceNumber,newInvoice)=>dispatch(editInvoiceList(invoiceNumber,newInvoice))
+  }
+}
+
+export default withRouter(connect(mapStateToProps,mapDispatchToProps)(InvoiceForm));
