@@ -37,6 +37,7 @@ https://invoicegenerator-vijayg.netlify.app/
   <li>Buttons changes dynamically for Send / Edit invoices in Modal</li>
   <li>Buttons changes dynamically for Add / Update invoice in Invoice form page</li>
   <li> Added feature : Invoice number must be created in unique manner . App does not allow to create invoice by giving same invoice number repeatedly.</li>
+  <li>If user clicks Edit Invoice from Homepage modal --> All that particular invoice's data are copied and shown in those particular field in invoice to make a changes.</li>
   </ul>
   
   
