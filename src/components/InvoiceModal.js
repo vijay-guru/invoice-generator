@@ -46,8 +46,8 @@ class InvoiceModal extends React.Component {
                 </h6>
               </div>
               <div className="text-end ms-4">
-                <h6 className="fw-bold mt-1 mb-2">Amount&nbsp;Due:{this.props.total}</h6>
-                <h5 className="fw-bold text-secondary">Currency&nbsp;:{this.props.currency}</h5>
+                <h6 className="fw-bold mt-1 mb-2">Amount&nbsp;Due:</h6>
+                <h5 className="fw-bold text-secondary">{this.props.currency}&nbsp;:{this.props.total}</h5>
               </div>
             </div>
             <div className="p-4">
