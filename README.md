@@ -49,7 +49,7 @@ https://invoicegenerator-vijayg.netlify.app/
   <li>After entering all the details and clicks Add invoice button, user must able to see that invoice in home page.</li>
   <li>If user clicks view button , then the modal must be sown in home page , displaying all the details of that particular invoice</li>
   <li>User can click Edit Invoice button in modal , and can able to edit all the details</li>
-  </li>If user clicks delete button in invoice listing page , that particular invoice will be deleted</li>
+  <li>If user clicks delete button in invoice listing page , that particular invoice will be deleted</li>
   </ul>
   
   
